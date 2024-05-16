@@ -1,0 +1,30 @@
+<.header>
+  URL <%= @url.id %>
+  <:subtitle>This is a url record from your database.</:subtitle>
+  <:actions>
+    <.link patch={~p"/urls/#{@url}/show/edit"} phx-click={JS.push_focus()}>
+      <.button>Edit url</.button>
+    </.link>
+  </:actions>
+</.header>
+
+<.list>
+  <:item title="Full"><%= @url.full %></:item>
+  <:item title="Short">
+    <.link navigate={~p"/#{@url.short}"}><%= [ShortWeb.Endpoint.url(), "/", @url.short] %></.link>
+  </:item>
+  <:item title="Redirects"><%= @url.count %></:item>
+</.list>
+
+<.back navigate={~p"/urls"}>Back to urls</.back>
+
+<.modal :if={@live_action == :edit} id="url-modal" show on_cancel={JS.patch(~p"/urls/#{@url}")}>
+  <.live_component
+    module={ShortWeb.URLLive.FormComponent}
+    id={@url.id}
+    title={@page_title}
+    action={@live_action}
+    url={@url}
+    patch={~p"/urls/#{@url}"}
+  />
+</.modal>
